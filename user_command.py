@@ -19,11 +19,6 @@ class userCommand(commands.Cog):
             discord.Embed(title=f'{str(member)}の情報 - アイコン',description=f"",colour=member.color)
         ]
 
-        
-        
-        lookupinfos[0].set_footer(text=f'{str(ctx.author)} ({ctx.author.id})',icon_url=ctx.author.avatar.url)
-        lookupinfos[1].set_footer(text=f'{str(ctx.author)} ({ctx.author.id})',icon_url=ctx.author.avatar.url)
-
         utc = member.created_at.timestamp()
         jst = datetime.datetime.fromtimestamp(utc, datetime.timezone(datetime.timedelta(hours=9))).timestamp()
         
@@ -65,6 +60,8 @@ class userCommand(commands.Cog):
             lookupinfos[2].set_thumbnail(url=member.guild_avatar.url)
         pageManager = pages.Paginator(pages=lookupinfos)
         await pageManager.respond(ctx.interaction,ephemeral=True)
+
+    
 
 def setup(bot):
     return bot.add_cog(userCommand(bot))

@@ -1,9 +1,8 @@
-from urllib.request import urlretrieve
 from discord.ext import commands
-from discord import Option, option
+from discord import Guild, Option, option
 from discord.ext import pages
 import discord
-import requests
+import aiohttp
 
 class voiceCommand(commands.Cog):
     def __init__(self, bot):
@@ -59,9 +58,11 @@ class voiceCommand(commands.Cog):
         else:
             volume = 1
         await ctx.defer()
-        urlResponse = requests.get(url).content
-        with open(f"temp/{ctx.guild_id}_TEMP.mp3",mode="wb") as f:
-            f.write(urlResponse)
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as r:
+                urlResponse = await r.read()
+                with open(f"temp/{ctx.guild_id}_TEMP.mp3",mode="wb") as f:
+                    f.write(urlResponse)
         ctx.guild.voice_client.play(discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(f"temp/{ctx.guild_id}_TEMP.mp3"), volume=volume))
         await ctx.respond("Playing...")
 
@@ -71,7 +72,18 @@ class voiceCommand(commands.Cog):
             ctx.guild.voice_client.stop()
             await ctx.respond("停止しました。")
         except:
-            await ctx.respond("すでに停止しています。")
+            await ctx.respond("すでに停止しています。")      
+
+    @commands.slash_command(name="speak",description="Google TTSで喋ります")
+    async def speak(self, ctx, string : Option(str,"喋るテキスト")):
+        await ctx.defer()
+        if (not ctx.guild.voice_client.is_playing()):
+            async with aiohttp.ClientSession() as session:
+                async with session.get(f'https://www.google.com/speech-api/v1/synthesize?text={string}&nc=mpeg&lang=ja&speed=0.5&client=lr-language-tts') as speak:
+                    with open(f"temp/{ctx.guild.id}_SPEAK_TEMP.mp3", mode="wb") as f:
+                        f.write(await speak.read())
+            ctx.guild.voice_client.play(discord.FFmpegPCMAudio(f"temp/{ctx.guild_id}_SPEAK_TEMP.mp3"))      
+            await ctx.respond(f"{str(ctx.author)}: {string}")
 
 def setup(bot):
     bot.add_cog(voiceCommand(bot))
