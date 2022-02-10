@@ -47,4 +47,4 @@ bot.load_extension("Cog.EventListener")
 print("Loaded all cog")
 
 print("Authorizing discord bot token.")
-bot.run("OTM3MjUyNjY2OTk0NzIwNzg4.YfZCkQ.aJJrKUSz977djYbC5b5_cx0AIa0")
+bot.run("your bot token here")
