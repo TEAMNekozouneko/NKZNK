@@ -28,23 +28,23 @@ bot = discord.Bot()
 
 print("Loading Cogs")
 print("Loading HelpCommand Cog")
-bot.load_extension("help_command")
+bot.load_extension("Cog.HelpCommand")
 
 print("OK. Loading User Command Cog")
-bot.load_extension("user_command")
+bot.load_extension("Cog.UserCommand")
 
 print("OK. Loading Voice Command Cog")
-bot.load_extension("voice_command")
+bot.load_extension("Cog.VoiceCommand")
 
 print("OK. Loading Guild Command Cog")
-bot.load_extension("guild_command")
+bot.load_extension("Cog.GuildCommand")
 
 print("OK. Loading Utility Command Cog")
-bot.load_extension("UtilityCommand")
+bot.load_extension("Cog.UtilityCommand")
 
 print("OK. Loading Event Cog")
-bot.load_extension("eventHandler")
+bot.load_extension("Cog.EventListener")
 print("Loaded all cog")
 
 print("Authorizing discord bot token.")
-bot.run("Your bot token here")
+bot.run("OTM3MjUyNjY2OTk0NzIwNzg4.YfZCkQ.aJJrKUSz977djYbC5b5_cx0AIa0")
