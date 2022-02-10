@@ -1,4 +1,4 @@
-[![Discord invite link](https://img.shields.io/discord/896668963709255680?color=blue&label=Discord&style=for-the-badge)](https://nekozouneko.ddns.net/discord)
+[![Discord invite link](https://img.shields.io/discord/896668963709255680?color=blue&label=Discord&style=for-the-badge)](http://nekozouneko.ddns.net/discord)
 # NKZNK - Discord Bot
 
 NKZNKは、TEAM Nekozouneko により開発されたDiscord Botです。
