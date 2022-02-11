@@ -36,4 +36,3 @@ python3 install mcstatus
 
 # Linux / MacOS (main.py実行でも可)
 ./start.sh
-```
