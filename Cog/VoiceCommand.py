@@ -23,7 +23,7 @@
 #
 
 from discord.ext import commands
-from discord import Guild, Option, option
+from discord import Guild, Option, SlashCommandGroup, option
 from discord.ext import pages
 import discord
 import aiohttp
@@ -108,6 +108,8 @@ class voiceCommand(commands.Cog):
                         f.write(await speak.read())
             ctx.guild.voice_client.play(discord.FFmpegPCMAudio(f"temp/{ctx.guild_id}_SPEAK_TEMP.mp3"))      
             await ctx.respond(f"{str(ctx.author)}: {string}")
+
+    
 
 def setup(bot):
     bot.add_cog(voiceCommand(bot))

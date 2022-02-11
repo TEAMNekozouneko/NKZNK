@@ -42,9 +42,12 @@ bot.load_extension("Cog.GuildCommand")
 print("OK. Loading Utility Command Cog")
 bot.load_extension("Cog.UtilityCommand")
 
+print("OK. Loading TextChannel Command Cog")
+bot.load_extension("Cog.ChannelCommand")
+
 print("OK. Loading Event Cog")
 bot.load_extension("Cog.EventListener")
 print("Loaded all cog")
 
 print("Authorizing discord bot token.")
-bot.run("your bot token here.")
+bot.run("OTM3MjUyNjY2OTk0NzIwNzg4.YfZCkQ.YC4W-79Smw-5gAF74fiFNbzNVZk")
