@@ -25,8 +25,8 @@ py -3 -m pip install git+https://github.com/Pycord-Development/pycord
 py -3 -m pip install mcstatus
 
 # Linux / MacOS
-python3 -m pip install git+https://github.com/Pycord-Development/pycord
-python3 -m pip install mcstatus
+python3 install git+https://github.com/Pycord-Development/pycord
+python3 install mcstatus
 ```
 ### 実行
 あとはmain.pyにトークンを入れれば以下のコマンドで実行できます。
@@ -36,3 +36,4 @@ python3 -m pip install mcstatus
 
 # Linux / MacOS (main.py実行でも可)
 ./start.sh
+```

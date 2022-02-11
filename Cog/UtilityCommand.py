@@ -22,6 +22,7 @@
 # SOFTWARE.
 #
 
+from dis import dis
 import discord
 
 from discord import Option
@@ -72,6 +73,78 @@ class UtilCommand(commands.Cog):
         else:
             embed = discord.Embed(title="エラー",description="引数 \"edtion\" で問題が発生しました。",color=discord.Color.dark_red())
         await ctx.respond(embed=embed)
+    
+    @commands.slash_command(name="invite",description="ボットの招待リンクを取得")
+    async def inviteBot(self, ctx, id : Option(str, "BotのIDを入力",required=False)):
+        if (id is None):
+            inviteLink=f"https://discord.com/oauth2/authorize?client_id={self.bot.user.id}&permissions=2199023255551&scope=bot%20applications.commands"
+            v = discord.ui.Button(
+                style=discord.ButtonStyle.link,
+                label="全権限",
+                url=inviteLink
+            )
+
+            i = discord.ui.Button(
+                style=discord.ButtonStyle.link,
+                label="管理者権限",
+                url=f"https://discord.com/oauth2/authorize?client_id={self.bot.user.id}&permissions=8&scope=bot%20applications.commands"
+            )
+
+            w = discord.ui.Button(
+                style=discord.ButtonStyle.link,
+                label="権限なし",
+                url=f"https://discord.com/oauth2/authorize?client_id={self.bot.user.id}&permissions=0&scope=bot%20applications.commands"
+            )
+
+            e = discord.Embed(
+                title="ボットを招待する。",
+                description="ボットの招待リンクを生成しました",
+                url=inviteLink,
+                color=discord.Color.purple()
+            )
+
+            iew = discord.ui.View()
+
+            iew.add_item(v)
+            iew.add_item(i)
+            iew.add_item(w)
+
+            await ctx.respond(embed=e, view=iew)
+        else:
+            id = int(id)
+            inviteLink=f"https://discord.com/oauth2/authorize?client_id={id}&permissions=2199023255551&scope=bot%20applications.commands"
+            v = discord.ui.Button(
+                style=discord.ButtonStyle.link,
+                label="全権限",
+                url=inviteLink
+            )
+
+            i = discord.ui.Button(
+                style=discord.ButtonStyle.link,
+                label="管理者権限",
+                url=f"https://discord.com/oauth2/authorize?client_id={id}&permissions=8&scope=bot%20applications.commands"
+            )
+
+            w = discord.ui.Button(
+                style=discord.ButtonStyle.link,
+                label="権限なし",
+                url=f"https://discord.com/oauth2/authorize?client_id={id}&permissions=0&scope=bot%20applications.commands"
+            )
+
+            e = discord.Embed(
+                title="ボットを招待する。",
+                description=f"ボットの招待リンクを生成しました（ID:{id}）",
+                url=inviteLink,
+                color=discord.Color.purple()
+            )
+
+            iew = discord.ui.View()
+
+            iew.add_item(v)
+            iew.add_item(i)
+            iew.add_item(w)
+
+            await ctx.respond(embed=e, view=iew)
     
 def setup(bot : discord.Bot):
     bot.add_cog(UtilCommand(bot))

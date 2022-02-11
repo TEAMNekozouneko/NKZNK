@@ -25,7 +25,7 @@
 import discord
 
 from discord.ext import commands
-from discord import ActivityType, Game, Option
+from discord import ActivityType, ButtonStyle, Game, Option
 from discord.ext import pages
 
 import platform
