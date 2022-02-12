@@ -4,6 +4,8 @@ from discord import SlashCommandGroup, ApplicationContext, Option, TextChannel, 
 
 from discord.ext import commands
 
+import Cog.AC as auto_complete
+
 class TextChannelCommand(commands.Cog):
 
     def __init__(self, bot : discord.Bot):
@@ -138,17 +140,85 @@ class TextChannelCommand(commands.Cog):
             elif (channel.rtc_region == VoiceRegion.us_west):
                 embed.add_field(name="サーバー", value=":flag_us: アメリカ合衆国（西）", inline=False)
             elif (channel.rtc_region == VoiceRegion.vip_amsterdam):
-                embed.add_field(name="サーバー", value=":flag_nl: :gem: アムステルダム（オランダ）", inline=False)
+                embed.add_field(name="サーバー", value=":flag_nl: :gem: VIP用 アムステルダム（オランダ）", inline=False)
             elif (channel.rtc_region == VoiceRegion.vip_us_east):
-                embed.add_field(name="サーバー", value=":flag_us: :gem: アメリカ合衆国（東）", inline=False)
+                embed.add_field(name="サーバー", value=":flag_us: :gem: VIP用 アメリカ合衆国（東）", inline=False)
             elif (channel.rtc_region == VoiceRegion.vip_us_west):
-                embed.add_field(name="サーバー", value=":flag_us: :gem: アメリカ合衆国（西）", inline=False)
+                embed.add_field(name="サーバー", value=":flag_us: :gem: VIP用 アメリカ合衆国（西）", inline=False)
 
         if (channel.user_limit == 0):
             embed.add_field(name="人数制限", value=f"無制限")
         else:
             embed.add_field(name="人数制限", value=f"{channel.user_limit}人")
-        await ctx.respond(embed=embed)        
+        await ctx.respond(embed=embed)
+    
+    @VoiceChannelGroup.command(name="limit", description="ユーザーの制限数を設定します。")
+    async def setLimit(self, ctx : ApplicationContext, channel : Option(VoiceChannel, "制限をつけるチャンネルを選択"), limit : Option(int, "制限人数を入力（0にすると制限解除）"), reason : Option(str, "理由を入力", required=False)):
+        if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
+            if (limit > 99):
+                embed = discord.Embed(title="エラーが発生しました。", description="制限は99までです。\n100以上の制限は課せられません。（{0}）".format(limit))
+            embed = discord.Embed(title=f"{channel.name} の制限を設定しました。", description=f"{channel.user_limit} -> {limit} 人", color=discord.Color.green())
+            await channel.edit(user_limit=limit, reason=reason)
+            await ctx.respond(embed=embed)
+        else:
+            embed = discord.Embed(title="エラーが発生しました。",description="権限 `サーバーを管理` または `チャンネルの管理`が必要です。",color=discord.Color.dark_red())
+            await ctx.respond(embed=embed)
+            return
+
+    @VoiceChannelGroup.command(name="region", description="サーバーの地域を選択")
+    async def setRegion(self, ctx : ApplicationContext, channel : VoiceChannel, region : Option(str, "地域を選択", autocomplete=auto_complete.regionSelector), reason : Option(str, "理由を入力", required=False)):
+        if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
+            if (region in auto_complete.regions):
+                r = None
+                if (region == "amsterdam"):
+                    r = VoiceRegion.amsterdam
+                elif (region == "brazil"):
+                    r = VoiceRegion.brazil
+                elif (region == "dubai"):
+                    r = VoiceRegion.dubai
+                elif (region == "eu_central"):
+                    r = VoiceRegion.eu_central
+                elif (region == "eu_west"):
+                    r = VoiceRegion.eu_west
+                elif (region == "frankfurt"):
+                    r = VoiceRegion.frankfurt
+                elif (region == "hongkong"):
+                    r = VoiceRegion.hongkong
+                elif (region == "india"):
+                    r = VoiceRegion.india
+                elif (region == "japan"):
+                    r = VoiceRegion.japan
+                elif (region == "london"):
+                    r = VoiceRegion.london
+                elif (region == "russia"):
+                    r = VoiceRegion.russia
+                elif (region == "singapore"):
+                    r = VoiceRegion.singapore
+                elif (region == "southafrica"):
+                    r = VoiceRegion.southafrica
+                elif (region == "south_korea"):
+                    r = VoiceRegion.south_korea
+                elif (region == "sydney"):
+                    r = VoiceRegion.sydney
+                elif (region == "us_central"):
+                    r = VoiceRegion.us_central
+                elif (region == "us_east"):
+                    r = VoiceRegion.us_east
+                elif (region == "us_south"):
+                    r = VoiceRegion.us_south
+                elif (region == "us_west"):
+                    r = VoiceRegion.us_west
+            else:
+                r = None
+            if (r is None):
+                region = "自動"
+            embed = discord.Embed(title=f"{channel.name} のサーバー地域を変更しました。", description=f":earth_asia: {region} に変更", color=discord.Color.green())
+            await channel.edit(rtc_region=r, reason=reason)
+            await ctx.respond(embed=embed)
+        else:
+            embed = discord.Embed(title="エラーが発生しました。",description="権限 `サーバーを管理` または `チャンネルの管理`が必要です。",color=discord.Color.dark_red())
+            await ctx.respond(embed=embed)
+            return
 
 def setup(bot : discord.Bot):
     bot.add_cog(TextChannelCommand(bot))
