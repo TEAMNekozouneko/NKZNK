@@ -22,7 +22,6 @@
 # SOFTWARE.
 #
 
-from dis import dis
 import discord
 
 from discord import Option

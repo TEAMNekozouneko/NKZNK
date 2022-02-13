@@ -36,6 +36,10 @@ class userCommand(commands.Cog):
 
     @commands.slash_command(name="user",description="ユーザー情報を取得します。")
     async def lookup(self, ctx, member : Option(discord.Member,"取得するユーザーを選択。")):
+        if (not isinstance(member, discord.Member)):
+            embed = discord.Embed(title="エラーが発生しました。", description="入力されたユーザーはこのサーバーに存在していません。", color=discord.Color.dark_red())
+            await ctx.respond(embed=embed)
+            return
         await ctx.defer()
         lookupinfos = [
             discord.Embed(title=f'{str(member)}の情報 - 基本情報',description=f"**ID** {member.id}",colour=member.color),
@@ -83,9 +87,7 @@ class userCommand(commands.Cog):
             lookupinfos[0].set_thumbnail(url=member.guild_avatar.url)
             lookupinfos[2].set_thumbnail(url=member.guild_avatar.url)
         pageManager = pages.Paginator(pages=lookupinfos)
-        await pageManager.respond(ctx.interaction,ephemeral=True)
-
-    
+        await pageManager.respond(ctx.interaction,ephemeral=True)    
 
 def setup(bot):
     return bot.add_cog(userCommand(bot))

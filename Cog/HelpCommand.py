@@ -50,6 +50,7 @@ class helpCommand(commands.Cog):
             ]
         
             helpPage[0].add_field(name="ライセンス",value='このBotはMITライセンスの上オープンソースで提供されています。\n[ライセンス情報](https://github.com/TEAMNekozouneko/NKZNK/blob/main/LICENSE)')
+            helpPage[0].add_field(name="その他", value="[NKZNK 利用規約](https://github.com/TEAMNekozouneko/NKZNK/wiki/Terms-of-use#%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84---terms-of-use)")
             helpPage[0].set_thumbnail(url=self.bot.user.avatar.url)
 
             helpPage[1].add_field(name="Python", value="Copyright (c) 2001-2022 Python Software Foundation.\nAll Rights Reserved.")

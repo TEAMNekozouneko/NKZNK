@@ -31,6 +31,7 @@ class TextChannelCommand(commands.Cog):
 
     @TextChannelGroup.command(name="lock",description="@everyoneからの送信をできなくします。(再実行で解除)")
     async def lock(self, ctx : ApplicationContext, channel : Option(TextChannel,"ロックするチャンネルを選択"), reason : Option(str, "理由を入力", required=False)):
+        print()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
             if (channel.permissions_for(channel.guild.default_role).send_messages):
                 await channel.set_permissions(channel.guild.default_role, send_messages=False)
@@ -215,6 +216,26 @@ class TextChannelCommand(commands.Cog):
             embed = discord.Embed(title=f"{channel.name} のサーバー地域を変更しました。", description=f":earth_asia: {region} に変更", color=discord.Color.green())
             await channel.edit(rtc_region=r, reason=reason)
             await ctx.respond(embed=embed)
+        else:
+            embed = discord.Embed(title="エラーが発生しました。",description="権限 `サーバーを管理` または `チャンネルの管理`が必要です。",color=discord.Color.dark_red())
+            await ctx.respond(embed=embed)
+            return
+
+    @VoiceChannelGroup.command(name="bitrate", description="ボイスチャンネルのビットレートを変更します。")
+    async def setBitrate(self, ctx : ApplicationContext, channel : VoiceChannel, bitrate : Option(int, "ビットレートを指定してください（ブーストしてない限り96Kbps以上不可）"), reason : Option(str, "理由を入力", required=False)):
+        if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
+            bitrate = bitrate * 1000
+            if (bitrate > ctx.author.guild.bitrate_limit):
+                embed = discord.Embed(title="エラーが発生しました。", description=f"このサーバーでは、{ctx.author.guild.bitrate_limit / 1000}Kbpsまでしか利用できません。",color=discord.Color.dark_red())
+                await ctx.respond(embed=embed)
+                return
+            elif (bitrate < 8000):
+                embed = discord.Embed(title="エラーが発生しました。", description=f"最低でも8Kbps以上を指定する必要があります。",color=discord.Color.dark_red())
+                await ctx.respond(embed=embed)
+                return
+            embed = discord.Embed(title=f"{channel.name} のビットレートを設定しました", description=f"{channel.bitrate / 1000}Kbps -> {bitrate / 1000}Kbps",color=discord.Color.green())
+            await channel.edit(bitrate=bitrate, reason=reason)
+            await ctx.respond(embed = embed)
         else:
             embed = discord.Embed(title="エラーが発生しました。",description="権限 `サーバーを管理` または `チャンネルの管理`が必要です。",color=discord.Color.dark_red())
             await ctx.respond(embed=embed)
