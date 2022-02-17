@@ -46,6 +46,9 @@ bot.load_extension("Cog.UtilityCommand")
 print("OK. Loading Channel Command Cog")
 bot.load_extension("Cog.ChannelCommand")
 
+print("OK. Loading Wiki Cog")
+bot.load_extension("Cog.WikiCommand")
+
 print("OK. Loading Event Cog")
 bot.load_extension("Cog.EventListener")
 print("Loaded all cog")

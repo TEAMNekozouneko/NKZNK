@@ -22,8 +22,9 @@
 # SOFTWARE.
 #
 
+import os
 from discord.ext import commands
-from discord import Guild, Option, SlashCommandGroup, option
+from discord import ApplicationContext, Guild, Option, SlashCommandGroup, option
 from discord.ext import pages
 import discord
 import aiohttp
@@ -76,7 +77,11 @@ class voiceCommand(commands.Cog):
             await ctx.respond(embed=embed)
 
     @commands.slash_command(name="play",description="音楽をURL経由で再生します。(YouTubeは再生できません。)")
-    async def urlplay(self, ctx, url : Option(str,"URLを入力...",required=False),volume: Option(int,"ボリューム 0% から 100%",required=False)):
+    async def urlplay(self, ctx: ApplicationContext, url : Option(str,"URLを入力...",required=False),volume: Option(int,"ボリューム 0% から 100%",required=False)):
+        if (ctx.author.guild.voice_client.is_paused()):
+            ctx.author.guild.voice_client.resume()
+            await ctx.respond("再開しました。")
+            return
         if (not volume is None):
             volume = volume / 100
         else:
@@ -101,15 +106,23 @@ class voiceCommand(commands.Cog):
     @commands.slash_command(name="speak",description="Google TTSで喋ります")
     async def speak(self, ctx, string : Option(str,"喋るテキスト")):
         await ctx.defer()
-        if (not ctx.guild.voice_client.is_playing()):
+        if (not ctx.author.guild.voice_client.is_playing()):
             async with aiohttp.ClientSession() as session:
                 async with session.get(f'https://www.google.com/speech-api/v1/synthesize?text={string}&nc=mpeg&lang=ja&speed=0.5&client=lr-language-tts') as speak:
+                    if (not os.path.exists("temp/")):
+                        os.mkdir("temp/")
                     with open(f"temp/{ctx.guild.id}_SPEAK_TEMP.mp3", mode="wb") as f:
                         f.write(await speak.read())
             ctx.guild.voice_client.play(discord.FFmpegPCMAudio(f"temp/{ctx.guild_id}_SPEAK_TEMP.mp3"))      
             await ctx.respond(f"{str(ctx.author)}: {string}")
-
     
+    @commands.slash_command(name="pause", description="音楽を一時停止します。")
+    async def pausem(self, ctx : ApplicationContext):
+        if (ctx.guild.voice_client is None):
+            await ctx.respond("すでに音楽が再生されていないか、一時停止済みです。")
+        else:
+            ctx.author.guild.voice_client.resume()
+            await ctx.respond("一時停止しました。")
 
 def setup(bot):
     bot.add_cog(voiceCommand(bot))

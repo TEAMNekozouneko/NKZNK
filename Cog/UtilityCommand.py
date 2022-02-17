@@ -24,12 +24,14 @@
 
 import discord
 
-from discord import Option
+from discord import ApplicationContext, ButtonStyle, Option
 
 from discord.ext import commands
 from discord.ext import pages
 
 from mcstatus import MinecraftServer, MinecraftBedrockServer
+
+import wikipediaapi
 
 class UtilCommand(commands.Cog):
 
@@ -144,6 +146,24 @@ class UtilCommand(commands.Cog):
             iew.add_item(w)
 
             await ctx.respond(embed=e, view=iew)
+
+    @commands.slash_command(name="ebdimage", description="埋め込みに画像を追加します。")
+    async def EmbedonImage(self, ctx : ApplicationContext, url : Option(str, "埋め込みに追加する画像を入力"), dlbutton: Option(bool, "ダウンロードボタンを表示するか", required=False)):
+        embed = discord.Embed(color=discord.Color.from_rgb(47, 49, 54))
+        embed.set_image(url=url)
+        if (dlbutton is None or dlbutton):
+            download_button = discord.ui.Button(
+                style=ButtonStyle.url,
+                url=url,
+                label="ダウンロード",
+                emoji="⬇"
+            )
+            vie = discord.ui.View()
+            vie.add_item(download_button)
+            await ctx.respond(view=vie, embed=embed)
+
+        else:
+            await ctx.respond(embed=embed)
     
 def setup(bot : discord.Bot):
     bot.add_cog(UtilCommand(bot))
