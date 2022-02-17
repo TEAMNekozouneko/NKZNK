@@ -28,7 +28,7 @@ class WikiCommand(commands.Cog):
             embed.set_footer(text="出典: フリー百科事典『ウィキペディア（Wikipedia）』", icon_url="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Wikipedia-logo-v2.svg/100px-Wikipedia-logo-v2.svg.png")
             await ctx.respond(embed=embed)
         else:
-            await ctx.respond("NOT FOUND (HTTP STATUS CODE 404)")
+            await ctx.respond("そのようなページは存在していません")
         
 def setup(bot : Bot):
     bot.add_cog(WikiCommand(bot))

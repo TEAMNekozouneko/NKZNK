@@ -55,4 +55,4 @@ print("Loaded all cog")
 
 print("Authorizing discord bot token.")
 
-bot.run("your bot token here.")
+bot.run("OTM3MjUyNjY2OTk0NzIwNzg4.YfZCkQ.oAxDPoS1gtcB5M2D9cOlVnGrJwI")
