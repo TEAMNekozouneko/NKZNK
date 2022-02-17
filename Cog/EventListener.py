@@ -29,7 +29,7 @@ from discord.ext import pages
 
 import asyncio
 
-import random
+import random, datetime, locale
 
 class EventHandler(commands.Cog):
 
@@ -49,8 +49,11 @@ class EventHandler(commands.Cog):
         await self.bot.change_presence(activity=discord.Activity(name="NKZNK v2022.02.10",type=ActivityType.playing), status=discord.Status.online)
 
     async def presences(self):
+        locale.setlocale(locale.LC_TIME, "ja_JP")
+        print(datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).strftime('%Y年%m月%d日（%a）'))
         while True:
-            l = ["/help でヘルプを表示","ver.2022.02.10 Unstable","/help to Help",f"現在{len(self.bot.guilds)}個のサーバーで利用されています!", "はよベータテスト終わらせたい", "Pythonで動いています"]
+            today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
+            l = ["/help でヘルプを表示","ver.2022.02.17 Unstable","/help to Help",f"現在{len(self.bot.guilds)}個のサーバーで利用されています!", f"本日は、{today.strftime('%Y年%m月%d日（%a）')}です。", "Pythonで動いています"]
             await asyncio.sleep(10)
             await self.bot.change_presence(activity=discord.Activity(name=l[random.randrange(6)],type=ActivityType.playing), status=discord.Status.online)
             
