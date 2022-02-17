@@ -23,10 +23,12 @@ git clone https://github.com/TEAMNekozouneko/NKZNK
 # Windows
 py -3 -m pip install git+https://github.com/Pycord-Development/pycord
 py -3 -m pip install mcstatus
+py -3 -m pip install aioconsole
 
 # Linux / MacOS
 python3 -m pip install git+https://github.com/Pycord-Development/pycord
 python3 -m pip install mcstatus
+python3 -m pip install aioconsole
 ```
 ### 実行
 あとはmain.pyにトークンを入れれば以下のコマンドで実行できます。
