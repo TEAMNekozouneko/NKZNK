@@ -50,9 +50,9 @@ class EventHandler(commands.Cog):
 
     async def presences(self):
         while True:
-            l = ["/help でヘルプを表示","ver.2022.02.10 Unstable","/help to Help",f"現在{len(self.bot.guilds)}個のサーバーで利用されています!"]
+            l = ["/help でヘルプを表示","ver.2022.02.10 Unstable","/help to Help",f"現在{len(self.bot.guilds)}個のサーバーで利用されています!", "はよベータテスト終わらせたい", "Pythonで動いています"]
             await asyncio.sleep(10)
-            await self.bot.change_presence(activity=discord.Activity(name=l[random.randrange(4)],type=ActivityType.playing), status=discord.Status.online)
+            await self.bot.change_presence(activity=discord.Activity(name=l[random.randrange(6)],type=ActivityType.playing), status=discord.Status.online)
             
 
 
