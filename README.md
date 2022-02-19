@@ -2,7 +2,8 @@
 # NKZNK - Discord Bot
 
 NKZNKは、TEAM Nekozouneko により開発されたDiscord Botです。
-現在試験版であり開発中です。
+
+<img src="https://user-images.githubusercontent.com/70869837/154792369-32cf9d32-82d4-42de-a127-ae50b2a5a6e8.png" width="256">
 
 # 改造方法
 
