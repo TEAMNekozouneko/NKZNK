@@ -3,7 +3,7 @@ regions = ["auto", "amsterdam", "brazil", "dubai", "eu_central", "eu_west", "eur
 sregions = ['auto', 'us_west', 'brazil', 'hongkong', 'india', 'japan', 'rotterdam', 'russia', 'singapore', 'south_korea', 'southafrica', 'sydney', 'us_central', 'us_east', 'us_south']
 
 
-async def regionSelector(ctx) -> list[str]:
+async def regionSelector(ctx):
     return [region for region in regions if region.startswith(ctx.value)]
 
 async def sregionSelector(ctx):

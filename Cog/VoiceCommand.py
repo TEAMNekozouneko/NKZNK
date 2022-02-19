@@ -90,10 +90,13 @@ class voiceCommand(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as r:
                 urlResponse = await r.read()
+                if (not os.path.exists("temp/")):
+                    os.mkdir("temp/")
                 with open(f"temp/{ctx.guild_id}_TEMP.mp3",mode="wb") as f:
                     f.write(urlResponse)
+        embed = discord.Embed(title="音楽を再生します...", color=discord.Color.purple())
         ctx.guild.voice_client.play(discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(f"temp/{ctx.guild_id}_TEMP.mp3"), volume=volume))
-        await ctx.respond("Playing...")
+        await ctx.respond(embed=embed)
 
     @commands.slash_command(name="stop",description="音楽を停止します。")
     async def musicstop(self,ctx):

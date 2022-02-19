@@ -111,7 +111,7 @@ class userCommand(commands.Cog):
     async def sdeafen(self, ctx : ApplicationContext, member : Option(discord.Member, "スピーカーミュートをするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
         if (ctx.author.guild_permissions.deafen_members):
             if (not member.voice is None):
-                if (not member.voice.deafen):
+                if (not member.voice.deaf):
                     embed = discord.Embed(title="スピーカーミュートしました。", description=f"**対象**: {member.mention}", color=discord.Color.green())
                     await member.edit(deafen=True, reason=reason)
                 else:
