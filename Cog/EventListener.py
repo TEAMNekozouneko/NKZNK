@@ -47,25 +47,26 @@ class EventHandler(commands.Cog):
         print(f"==========================================================================")       
         task = asyncio.create_task(self.presences())
         consoleTask = asyncio.create_task(self.console())
-        await self.bot.change_presence(activity=discord.Activity(name="NKZNK v2022.02.10",type=ActivityType.playing), status=discord.Status.online)
+        await self.bot.change_presence(activity=discord.Activity(name="NKZNK v2022.02.18",type=ActivityType.playing), status=discord.Status.online)
 
     async def presences(self):
-        locale.setlocale(locale.LC_TIME, "ja_JP")
-        print(datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).strftime('%Y年%m月%d日（%a）'))
         while True:
+            locale.setlocale(locale.LC_TIME, "ja_JP")
             today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
-            l = ["/help でヘルプを表示","ver.2022.02.17 Unstable","/help to Help",f"現在{len(self.bot.guilds)}個のサーバーで利用されています!", f"本日は、{today.strftime('%Y年%m月%d日（%a）')}です。", "Pythonで動いています"]
+            l = ["/help to Help.", "/help でヘルプが出ます。", "本日もご利用ありがとうございます。", f"{len(self.bot.guilds)}個のサーバーで利用されているんだって!", "NKZNK Version 22.02.18", "(c) 2022 TEAM Nekozouneko",f"本日は、{today.strftime('%Y/%m/%d %H:%M')}"]
             await asyncio.sleep(10)
-            await self.bot.change_presence(activity=discord.Activity(name=l[random.randrange(6)],type=ActivityType.playing), status=discord.Status.online)
+            await self.bot.change_presence(activity=discord.Activity(name=random.choice(l),type=ActivityType.playing), status=discord.Status.online)
 
     async def console(self):
-        input_command = await aioconsole.ainput("CONSOLE > ")
+        print("NKZNK [Version 2022.02.18]")
+        print("Copyright (C) 2021-2022 TEAM Nekozouneko\n")
+        input_command = await aioconsole.ainput("NKZNK@CONSOLE > ")
         while True:
             if (input_command == "exit" or input_command == "stop"):
                 await self.bot.close()
                 break
             elif (input_command == "version"):
-                print("NKZNK v.2022.02.17 beta release.")
+                print("NKZNK v.2022.02.18 stable release.")
                 print("Repository: https://github.com/TEAMNekozouneko/NKZNK")
             elif (input_command == "reload" or input_command == "rl"):
                 print("Reloading All Cogs...")
@@ -85,9 +86,10 @@ class EventHandler(commands.Cog):
                 print("version - about this bot")
                 print("invite - show invite link")
                 print("reload - reload cogs")
+                print("stop - stop bot")
             else:
                 print(f"ERR: Command \"{input_command}\" is not found. Type \"help\" for help.")
-            input_command = await aioconsole.ainput("CONSOLE > ")
+            input_command = await aioconsole.ainput("NKZNK@CONSOLE > ")
 
 def setup(bot):
     bot.add_cog(EventHandler(bot))
