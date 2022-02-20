@@ -1,0 +1,3 @@
+mcstatus
+aioconsole
+git+https://github.com/Pycord-Development/pycord.git#egg=py-cord

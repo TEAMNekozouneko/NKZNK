@@ -44,8 +44,8 @@ class helpCommand(commands.Cog):
             discord.Embed(title="NKZNK - 協力",description="開発協力していただいた以下の方々にお礼申し上げます。",color=discord.Color.blue(),url="https://discord.gg/ErDmtEpaqe"),
         ]
         
-        helpPage[0].add_field(name="ライセンス",value='このBotはMITライセンスの上オープンソースで提供されています。\n[ライセンス情報](https://github.com/TEAMNekozouneko/NKZNK/blob/Latest/LICENSE)\n[NKZNK コマンドドキュメント](https://github.com/TEAMNekozouneko/NKZNK/wiki/Commands)\n[NKZNK Wiki](https://github.com/TEAMNekozouneko/NKZNK/wiki)')
-        helpPage[0].add_field(name="その他", value="[NKZNK 利用規約](https://github.com/TEAMNekozouneko/NKZNK/wiki/Terms-of-use#%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84---terms-of-use)")
+        helpPage[0].add_field(name="ライセンス",value='このBotはMITライセンスの上オープンソースで提供されています。\n[ライセンス情報](https://github.com/TEAMNekozouneko/NKZNK/blob/Latest/LICENSE)')
+        helpPage[0].add_field(name="その他", value="[NKZNK 利用規約](https://github.com/TEAMNekozouneko/NKZNK/wiki/Terms-of-use#%E5%88%A9%E7%94%A8%E8%A6%8F%E7%B4%84---terms-of-use)\n[NKZNK コマンドドキュメント](https://github.com/TEAMNekozouneko/NKZNK/wiki/Commands)\n[NKZNK Wiki](https://github.com/TEAMNekozouneko/NKZNK/wiki)")
         helpPage[0].set_thumbnail(url=self.bot.user.avatar.url)
 
         helpPage[1].add_field(name="Python", value="Copyright (c) 2001-2022 Python Software Foundation.\nAll Rights Reserved.")

@@ -87,6 +87,17 @@ class EventHandler(commands.Cog):
                 print("invite - show invite link")
                 print("reload - reload cogs")
                 print("stop - stop bot")
+            elif (input_command == "cogs" or input_command == "exts" or input_command == "extensions"):
+                print(f"Cogs ({len(self.bot.cogs.keys())}):")
+                print(", ".join(self.bot.cogs.keys()) + "\n")
+
+                print(f"Extensions ({len(self.bot.extensions.keys())})")
+                print(", ".join(self.bot.extensions.keys()))
+            elif (input_command == "info"):
+                print(f"INFOMATION")
+                print(f"NAME / ID: {str(self.bot.user)} ({self.bot.user.id})")
+                print(f"AVATAR URL: {self.bot.user.avatar.url}")
+                print(f"2FA VERIFYED: {self.bot.user.mfa_enabled}")
             else:
                 print(f"ERR: Command \"{input_command}\" is not found. Type \"help\" for help.")
             input_command = await aioconsole.ainput("NKZNK@CONSOLE > ")
