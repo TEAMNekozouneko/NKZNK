@@ -20,22 +20,22 @@ git clone https://github.com/TEAMNekozouneko/NKZNK
 ```
 ### モジュールをインストール
 そしたら以下のコマンドで必要モジュールをインストールします。
+#### Windows
 ```bash
-# Windows
-py -3 -m pip install git+https://github.com/Pycord-Development/pycord
-py -3 -m pip install mcstatus
-py -3 -m pip install aioconsole
+py -3 -m pip install -r requirements.txt
+```
 
-# Linux / MacOS
-python3 -m pip install git+https://github.com/Pycord-Development/pycord
-python3 -m pip install mcstatus
-python3 -m pip install aioconsole
+#### Linux / MacOS
+```
+python3 -m pip install -r requirements.txt
 ```
 ### 実行
 あとはmain.pyにトークンを入れれば以下のコマンドで実行できます。
+#### Windows
 ```bash
-# Windows (main.py実行でも可)
-./start.bat
-
-# Linux / MacOS (main.py実行でも可)
-./start.sh
+py -3 main.py
+```
+#### Linux / MacOS (main.py実行でも可)
+```
+python3 main.py
+```
