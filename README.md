@@ -35,7 +35,21 @@ python3 -m pip install -r requirements.txt
 ```bash
 py -3 main.py
 ```
-#### Linux / MacOS (main.py実行でも可)
+#### Linux / MacOS
+Linuxの場合ロケールの設定が異なっています。
+以下のコードに変更してください。
+
+```diff
+# 略
+
+async def presences(self):
+    while True:
+-       locale.setlocale(locale.LC_TIME, "ja_JP")
++       locale.setlocale(locale.LC_TIME, "ja_JP.UTF-8")
+        today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
+# 略
+```
+そして以下を実行します。
 ```
 python3 main.py
 ```
