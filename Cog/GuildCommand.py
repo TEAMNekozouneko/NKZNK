@@ -132,7 +132,6 @@ class GuildCommands(commands.Cog):
                 guildInfo = self.bot.get_guild(intid)
                 embeds = [
                     discord.Embed(title=f"{guildInfo.name} の基本情報", description=f"**ID:** {guildInfo.id}",color=discord.Color.green()),
-                    discord.Embed(title=f"{guildInfo.name} のチャンネル情報", description=f"**ID:** {guildInfo.id}",color=discord.Color.green()),
                     discord.Embed(title=f"{guildInfo.name} の詳細情報", description=f"**ID:** {guildInfo.id}",color=discord.Color.green()),
                 ]
 
@@ -153,35 +152,12 @@ class GuildCommands(commands.Cog):
 
                 e1.add_field(name="作成日",value=f"<t:{floor(datetime.datetime.fromtimestamp(guildInfo.created_at.timestamp(), datetime.timezone(datetime.timedelta(hours=9))).timestamp())}>")
                 
-                # ==== Embeds[1] の設定====
+                # ==== Embeds[1] の設定 ====
 
-                e2 = embeds[1]
-
-                e2.add_field(name="チャンネル数", value=f"テキスト: `{len(guildInfo.text_channels)}` ボイス: `{len(guildInfo.voice_channels)}` ステージ: `{len(guildInfo.stage_channels)}` スレッド: `{len(guildInfo.threads)}`", inline=False)
-
-                if (not guildInfo.afk_channel is None):
-                    e2.add_field(name="AFK 設定", value=f"{guildInfo.afk_channel.mention} | `{guildInfo.afk_timeout}` 秒")
-
-                if (not guildInfo.rules_channel is None):
-                    e2.add_field(name="ルールチャンネル", value=f"{guildInfo.rules_channel.mention}")
-
-                if (not guildInfo.system_channel is None):
-                    e2.add_field(name="システムチャンネル", value=f"{guildInfo.system_channel.mention}")
-
-                # ==== Embeds[2] の設定 ====
-
-                e3 = embeds[2]
+                e3 = embeds[1]
 
                 e3.add_field(name="メンバー数", value=f"メンバー: `{guildInfo.member_count}` 人")
                 e3.add_field(name="アップロード上限", value=f"{floor(guildInfo.filesize_limit /1000 /1000)} MB")
-
-                role_mentioned = []
-                for role in guildInfo.roles:
-                    role_mentioned = role_mentioned + [role.mention]
-
-                amention = ", ".join(role_mentioned)
-
-                e3.add_field(name="ロール", value=amention, inline=False)
 
                 e3.add_field(name="絵文字上限", value=f"{len(guildInfo.emojis)} / {guildInfo.emoji_limit}")
 
@@ -191,18 +167,17 @@ class GuildCommands(commands.Cog):
                 
                 if (not guildInfo.icon is None):
                     e1.set_thumbnail(url=guildInfo.icon.url)
-                    e2.set_thumbnail(url=guildInfo.icon.url)
                     e3.set_thumbnail(url=guildInfo.icon.url)
                     embeds = embeds + [discord.Embed(title=f"{guildInfo.name} のサーバーアイコン", description=f"{guildInfo.icon.url}")]
-                    embeds[3].set_image(url=guildInfo.icon.url)
+                    embeds[2].set_image(url=guildInfo.icon.url)
 
                 if (not guildInfo.splash is None):
                     embeds = embeds + [discord.Embed(title=f"{guildInfo.name} のサーバースプラッシュ画面", description=f"{guildInfo.splash.url}")]
-                    embeds[4].set_image(url=guildInfo.splash.url)
+                    embeds[3].set_image(url=guildInfo.splash.url)
 
                 if (not guildInfo.banner is None):
                     embeds = embeds + [discord.Embed(title=f"{guildInfo.name} のサーバーバナー", description=f"{guildInfo.banner.url}")]
-                    embeds[5].set_image(url=guildInfo.banner.url)
+                    embeds[4].set_image(url=guildInfo.banner.url)
 
                 pageMan = pages.Paginator(embeds)
                 await pageMan.respond(ctx.interaction)

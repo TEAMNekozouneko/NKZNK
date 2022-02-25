@@ -26,36 +26,44 @@ print("Starting...")
 
 print("Loading Modules")
 
-import discord
+import discord, json, sys, os
+from Cog.AC import resetConfig
+
+if (not os.path.exists("config.json")):
+    print("Generating Default Config...")
+    resetConfig()
+    print("Generated. please check config.json file")
+    sys.exit()
+
+# 設定を読み込む
+config_file = open("config.json", "r")
+
+config_dict = json.load(config_file)
+
+if (not config_dict["accept_license"]):
+    print("you is not accepted licese, please check config.json file")
+    sys.exit()
 
 bot = discord.Bot()
 
-print("Loading Cogs")
-print("Loading HelpCommand Cog")
-bot.load_extension("Cog.HelpCommand")
+print("Loading Default Exetensions")
 
-print("OK. Loading User Command Cog")
-bot.load_extension("Cog.UserCommand")
+for exts in config_dict["extensions"]["default_exts"]:
+    print(f"loading {exts}...")
+    bot.load_extension(exts)
 
-print("OK. Loading Voice Command Cog")
-bot.load_extension("Cog.VoiceCommand")
+print("Loading Add-on Exetensions")
 
-print("OK. Loading Guild Command Cog")
-bot.load_extension("Cog.GuildCommand")
+for aexts in config_dict["extensions"]["addon_exts"]:
+    print(f"loading {aexts}...")
 
-print("OK. Loading Utility Command Cog")
-bot.load_extension("Cog.UtilityCommand")
-
-print("OK. Loading Channel Command Cog")
-bot.load_extension("Cog.ChannelCommand")
-
-print("OK. Loading Wiki Cog")
-bot.load_extension("Cog.WikiCommand")
-
-print("OK. Loading Event Cog")
-bot.load_extension("Cog.EventListener")
 print("Loaded all cog")
 
 print("Authorizing discord bot token.")
 
-bot.run("your bot token here.")
+try:
+    token = str(config_dict["settings"]["token"])
+    bot.run(token)
+except discord.errors.LoginFailure:
+    print("Failed login. please check config.json file")
+    sys.exit()

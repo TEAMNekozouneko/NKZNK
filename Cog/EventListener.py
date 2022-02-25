@@ -26,13 +26,19 @@ import discord
 from discord import ActivityType
 from discord.ext import commands
 
-import aioconsole, asyncio, datetime, random, locale, platform
+import aioconsole, asyncio, datetime, random, locale, platform, json
 
 class EventHandler(commands.Cog):
 
     def __init__(self, bot : discord.Bot):
         self.bot = bot
         self._last_member = None
+
+        self.ConfigFile = open("config.json", "r")
+        self.ConfigDict = json.load(self.ConfigFile)
+
+        self.bot_name = self.ConfigDict["settings"]["name"]
+        self.bot_ver = self.ConfigDict["settings"]["version"]
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -43,20 +49,27 @@ class EventHandler(commands.Cog):
         print("\nTHIS BOT BY NEKOZOUNEKO TEAM")
         print(f"==========================================================================")       
         task = asyncio.create_task(self.presences())
-        consoleTask = asyncio.create_task(self.console())
-        await self.bot.change_presence(activity=discord.Activity(name="NKZNK v2022.02.18",type=ActivityType.playing), status=discord.Status.online)
+        if (self.ConfigDict["settings"]["enable_console"]):
+            consoleTask = asyncio.create_task(self.console())
+        await self.bot.change_presence(activity=discord.Activity(name=f"{self.bot_name} v{self.bot_ver}",type=ActivityType.playing), status=discord.Status.online)
 
     async def presences(self):
+        if (self.ConfigDict["settings"]["unix"]):
+            locale.setlocale(locale.LC_TIME, "ja_JP.UTF-8")
+        else:
+            locale.setlocale(locale.LC_TIME, "ja-JP")
+
         while True:
-            locale.setlocale(locale.LC_TIME, "ja_JP")
             today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
-            l = ["/help to Help.", "/help でヘルプが出ます。", "本日もご利用ありがとうございます。", f"{len(self.bot.guilds)}個のサーバーで利用されているんだって!", "NKZNK Version 22.02.18", "(c) 2022 TEAM Nekozouneko",f"本日は、{today.strftime('%Y/%m/%d %H:%M')}"]
+
+            l = ["/help to Help.", "/help でヘルプが出ます。", "本日もご利用ありがとうございます。", f"{len(self.bot.guilds)}個のサーバーで利用されているんだって!", f"{self.bot_name} Version {self.bot_ver}", "(c) 2022 TEAM Nekozouneko",f"本日は、{today.strftime('%Y/%m/%d %H:%M')}"]
+            
             await asyncio.sleep(10)
             await self.bot.change_presence(activity=discord.Activity(name=random.choice(l),type=ActivityType.playing), status=discord.Status.online)
 
     async def console(self):
         print(f"{platform.system()} {platform.release()} ({platform.architecture()[0]}) / {platform.python_implementation()} {platform.python_version()}")
-        print("\nNKZNK [Version 2022.02.25]")
+        print(f"\n{self.bot_name} [Version {self.bot_ver}]")
         print("Copyright (C) 2021-2022 TEAM Nekozouneko\n")
         input_command = await aioconsole.ainput("NKZNK@CONSOLE > ")
         while True:
@@ -64,7 +77,7 @@ class EventHandler(commands.Cog):
                 await self.bot.close()
                 break
             elif (input_command == "version"):
-                print("NKZNK v.2022.02.25 stable release.")
+                print(f"{self.bot_name} v.{self.bot_ver} stable release.")
                 print("Repository: https://github.com/TEAMNekozouneko/NKZNK")
             elif (input_command == "reload" or input_command == "rl"):
                 print("Reloading All Exts...")
@@ -87,6 +100,7 @@ class EventHandler(commands.Cog):
                 print("invite  - show invite link")
                 print("info    - bot information")
                 print("reload  - reload cogs")
+                print("reset   - reset config.json")
                 print("stop    - stop bot")
                 print("version - about this bot")
             elif (input_command == "cogs" or input_command == "exts" or input_command == "extensions"):
@@ -105,9 +119,17 @@ class EventHandler(commands.Cog):
                 print(f"VOICE / STAGES: {len(self.bot.voice_clients)} CONNECTED")
                 print(f"EMOJIS: {len(self.bot.emojis)}")
                 print(f"STICKERS: {len(self.bot.stickers)}")
+            elif (input_command == "reset"):
+                print("\"reset confirm\" to reset config.json")
+            elif (input_command == "reset confirm"):
+                print("reseting config.json...")
+                from Cog.AC import resetConfig
+                resetConfig()
+                await self.bot.close()
+                break
             else:
                 print(f"ERR: Command \"{input_command}\" is not found. Type \"help\" for help.")
             input_command = await aioconsole.ainput("NKZNK@CONSOLE > ")
 
-def setup(bot):
+def setup(bot : discord.Bot):
     bot.add_cog(EventHandler(bot))
