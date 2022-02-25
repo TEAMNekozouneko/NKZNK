@@ -54,28 +54,54 @@ py -3 -m pip install -r requirements.txt
 python3 -m pip install -r requirements.txt
 ```
 ### 実行
-あとはmain.pyにトークンを入れれば以下のコマンドで実行できます。
+まずはmain.pyを実行します
 #### Windows
 ```bash
 py -3 main.py
 ```
 #### Linux / MacOS
+```bash
+python3 main.py
+```
+
+そして自動的に`config.json`が生成されるので設定します。
+※これは例です。
+```json
+{
+    "accept_license": true,
+
+    "extensions": {
+        "addon_exts": [],
+        "default_exts": ["Cog.ChannelCommand", "Cog.GuildCommand", "Cog.HelpCommand", "Cog.UserCommand", "Cog.UtilityCommand", "Cog.VoiceCommand", "Cog.WikiCommand", "Cog.EventListener"]
+    },
+
+    "settings": {
+        "enable_console": true,
+        "name": "NKZNK",
+        "unix": false,
+        "token": "your bot token here.",
+        "version": "2022.02.25"
+    }
+}
+```
+<details><summary>Linuxの場合</summary>
 Linuxの場合ロケールの設定が異なっています。
-以下のコードに変更してください。
+設定から以下のように変更してください。
 
-> Cog/EventListener.py
+> config.json
 ```diff
-# 略 
+# 略
 
-async def presences(self):
-    while True:
--       locale.setlocale(locale.LC_TIME, "ja_JP")
-+       locale.setlocale(locale.LC_TIME, "ja_JP.UTF-8")
-        today = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9)))
+    "settings": {
+        "enable_console": true,
+        "name": "NKZNK",
+-       "unix": false,
++       "unix": true,
+        "token": "your bot token here.",
+        "version": "2022.02.25"
+    }
 
 # 略
 ```
-そして以下を実行します。
-```
-python3 main.py
-```
+</details><br>
+そうして再実行すれば、使用可能になります。
