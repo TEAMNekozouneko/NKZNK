@@ -2,10 +2,8 @@ import discord
 
 from discord import ApplicationContext, Bot, Option
 
-from discord.commands import SlashCommandGroup
 from discord.ext import commands
 
-import wikipedia
 import wikipediaapi
 
 class WikiCommand(commands.Cog):

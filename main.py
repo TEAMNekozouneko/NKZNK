@@ -22,6 +22,10 @@
 # SOFTWARE.
 #
 
+print("Starting...")
+
+print("Loading Modules")
+
 import discord
 
 bot = discord.Bot()

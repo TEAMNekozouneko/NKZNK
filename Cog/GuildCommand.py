@@ -24,7 +24,7 @@
 
 import discord
 
-from discord import ApplicationContext, Option, TextChannel, SlashCommandGroup
+from discord import Option
 
 from discord.ext import pages
 from discord.ext import commands

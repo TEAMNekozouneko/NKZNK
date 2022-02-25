@@ -27,11 +27,8 @@ import discord
 from discord import ApplicationContext, ButtonStyle, Option
 
 from discord.ext import commands
-from discord.ext import pages
 
 from mcstatus import MinecraftServer, MinecraftBedrockServer
-
-import wikipediaapi
 
 class UtilCommand(commands.Cog):
 

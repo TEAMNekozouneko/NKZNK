@@ -162,10 +162,11 @@ class ChannelCommand(commands.Cog):
     async def setLimit(self, ctx : ApplicationContext, channel : Option(VoiceChannel, "制限をつけるチャンネルを選択"), limit : Option(int, "制限人数を入力（0にすると制限解除）"), reason : Option(str, "理由を入力", required=False)):
         await ctx.defer()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
-            if (limit > 99):
-                embed = discord.Embed(title="エラーが発生しました。", description="制限は99までです。\n100以上の制限は課せられません。（{0}）".format(limit))
-            embed = discord.Embed(title=f"{channel.name} の制限を設定しました。", description=f"{channel.user_limit} -> {limit} 人", color=discord.Color.green())
-            await channel.edit(user_limit=limit, reason=reason)
+            if (100 <= limit):
+                embed = discord.Embed(title="エラーが発生しました。", description="制限は99までです。\n100以上の制限は課せられません。（{0}）".format(limit), color=discord.Color.dark_red())
+            else:
+                embed = discord.Embed(title=f"{channel.name} の制限を設定しました。", description=f"{channel.user_limit} -> {limit} 人", color=discord.Color.green())
+                await channel.edit(user_limit=limit, reason=reason)
             await ctx.respond(embed=embed)
         else:
             embed = discord.Embed(title="エラーが発生しました。",description="権限 `サーバーを管理` または `チャンネルの管理`が必要です。",color=discord.Color.dark_red())

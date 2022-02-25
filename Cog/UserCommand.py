@@ -22,11 +22,15 @@
 # SOFTWARE.
 #
 
-from discord.ext import commands
-from discord import ApplicationContext, Option, SlashCommandGroup
-from discord.ext import pages
 import discord
+
+from discord import ApplicationContext, Option, SlashCommandGroup
+
+from discord.ext import commands
+from discord.ext import pages
+
 import datetime
+
 from math import floor
 
 class userCommand(commands.Cog):
@@ -124,8 +128,8 @@ class userCommand(commands.Cog):
         await ctx.respond(embed=embed)
 
     @UserCommandGroup.command(name="ban", description="ユーザーをBANします。")
-    async def mban(self, ctx, member : Option(discord.Member, "BANするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
-        if (ctx.author.guild_permissions.kick_members):
+    async def mban(self, ctx : ApplicationContext, member : Option(discord.Member, "BANするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
+        if (ctx.author.guild_permissions.ban_members):
             embed = discord.Embed(title=f"{str(member)}のアクセスを禁止しました。", description="Banned by an operator.", color=discord.Color.green())
             await member.ban(reason=reason)
             await ctx.respond(embed=embed)
@@ -134,8 +138,8 @@ class userCommand(commands.Cog):
             await ctx.respond(embed=embed)
 
     @UserCommandGroup.command(name="kick", description="ユーザーをKickします。")
-    async def mkicik(self, ctx, member : Option(discord.Member, "Kickするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
-        if (ctx.author.guild_permissions.ban_members):
+    async def mkicik(self, ctx : ApplicationContext, member : Option(discord.Member, "Kickするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
+        if (ctx.author.guild_permissions.kick_members):
             embed = discord.Embed(title=f"{str(member)}を追放しました。", description="Kicked by an operator.", color=discord.Color.green())
             await member.kick(reason=reason)
             await ctx.respond(embed=embed)

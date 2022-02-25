@@ -25,7 +25,7 @@
 import discord
 
 from discord.ext import commands
-from discord import ActivityType, ButtonStyle, Game, Option
+from discord import ApplicationContext
 from discord.ext import pages
 
 import platform
@@ -36,7 +36,7 @@ class helpCommand(commands.Cog):
         self._last_member = None
     
     @commands.slash_command(name="help",description="このBotについて色々知ることができます。")
-    async def helpCommand(self, ctx):
+    async def helpCommand(self, ctx : ApplicationContext):
         await ctx.defer()
         helpPage = [
             discord.Embed(title="NKZNK - システム情報",description=f"**Python**: {platform.python_version()}\n**Pycord**: {discord.__version__}",color=discord.Color.blue(),url="https://discord.gg/ErDmtEpaqe"),

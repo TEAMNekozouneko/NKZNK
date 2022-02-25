@@ -25,11 +25,8 @@
 import discord
 from discord import ActivityType
 from discord.ext import commands
-from discord.ext import pages
 
-import asyncio
-
-import random, datetime, locale, aioconsole
+import aioconsole, asyncio, datetime, random, locale, platform
 
 class EventHandler(commands.Cog):
 
@@ -40,8 +37,8 @@ class EventHandler(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print("Authorized token.")
-        print(f"============================== NKZNK ==============================")
-        print(f" Discord API: Pycord {discord.__version__}")
+        print(f"================================= NKZNK =================================")
+        print(f"Discord API: Pycord {discord.__version__}")
         print('\nMIT License\n\nCopyright (c) 2022 Nekozouneko Team Lab\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the "Software"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.')
         print("\nTHIS BOT BY NEKOZOUNEKO TEAM")
         print(f"==========================================================================")       
@@ -58,7 +55,8 @@ class EventHandler(commands.Cog):
             await self.bot.change_presence(activity=discord.Activity(name=random.choice(l),type=ActivityType.playing), status=discord.Status.online)
 
     async def console(self):
-        print("NKZNK [Version 2022.02.18]")
+        print(f"{platform.system()} {platform.release()} ({platform.architecture()[0]}) / {platform.python_implementation()} {platform.python_version()}")
+        print("\nNKZNK [Version 2022.02.25]")
         print("Copyright (C) 2021-2022 TEAM Nekozouneko\n")
         input_command = await aioconsole.ainput("NKZNK@CONSOLE > ")
         while True:
@@ -66,27 +64,31 @@ class EventHandler(commands.Cog):
                 await self.bot.close()
                 break
             elif (input_command == "version"):
-                print("NKZNK v.2022.02.18 stable release.")
+                print("NKZNK v.2022.02.25 stable release.")
                 print("Repository: https://github.com/TEAMNekozouneko/NKZNK")
             elif (input_command == "reload" or input_command == "rl"):
-                print("Reloading All Cogs...")
-                self.bot.reload_extension("Cog.ChannelCommand")
-                self.bot.reload_extension("Cog.GuildCommand")
-                self.bot.reload_extension("Cog.HelpCommand")
-                self.bot.reload_extension("Cog.UserCommand")
-                self.bot.reload_extension("Cog.UtilityCommand")
-                self.bot.reload_extension("Cog.VoiceCommand")
-                self.bot.reload_extension("Cog.WikiCommand")
+                print("Reloading All Exts...")
+                l = []
+                for extname in self.bot.extensions.keys():
+                    l = l + [str(extname)]
+                
+                l.remove("Cog.EventListener")
+
+                for ex in l:
+                    print(f"Reloading {ex}")
+                    self.bot.reload_extension(ex)
                 print("Reloaded")
             elif (input_command == "invite"):
                 print(f"Link: https://discord.com/oauth2/authorize?client_id={self.bot.user.id}&permissions=2199023255551&scope=bot%20applications.commands")
             elif (input_command == "help" or input_command == "?"):
                 print("NKZNK Console Help\n")
-                print("help - show this")
+                print("cogs    - Cog and exetensions list")
+                print("help    - show this")
+                print("invite  - show invite link")
+                print("info    - bot information")
+                print("reload  - reload cogs")
+                print("stop    - stop bot")
                 print("version - about this bot")
-                print("invite - show invite link")
-                print("reload - reload cogs")
-                print("stop - stop bot")
             elif (input_command == "cogs" or input_command == "exts" or input_command == "extensions"):
                 print(f"Cogs ({len(self.bot.cogs.keys())}):")
                 print(", ".join(self.bot.cogs.keys()) + "\n")
@@ -94,10 +96,15 @@ class EventHandler(commands.Cog):
                 print(f"Extensions ({len(self.bot.extensions.keys())})")
                 print(", ".join(self.bot.extensions.keys()))
             elif (input_command == "info"):
-                print(f"INFOMATION")
+                print(f"===== BOT INFOMATION =====\n")
                 print(f"NAME / ID: {str(self.bot.user)} ({self.bot.user.id})")
                 print(f"AVATAR URL: {self.bot.user.avatar.url}")
                 print(f"2FA VERIFYED: {self.bot.user.mfa_enabled}")
+                print(f"\n===== SERVER INFOMATION =====\n")
+                print(f"SERVERS: {len(self.bot.guilds)} SERVERS JOINED")
+                print(f"VOICE / STAGES: {len(self.bot.voice_clients)} CONNECTED")
+                print(f"EMOJIS: {len(self.bot.emojis)}")
+                print(f"STICKERS: {len(self.bot.stickers)}")
             else:
                 print(f"ERR: Command \"{input_command}\" is not found. Type \"help\" for help.")
             input_command = await aioconsole.ainput("NKZNK@CONSOLE > ")

@@ -22,11 +22,14 @@
 # SOFTWARE.
 #
 
-import os
-from discord.ext import commands
-from discord import ApplicationContext, Guild, Option, SlashCommandGroup, option
-from discord.ext import pages
 import discord
+
+from discord import ApplicationContext, Option
+
+from discord.ext import commands
+
+import os
+
 import aiohttp
 
 class voiceCommand(commands.Cog):
@@ -89,6 +92,7 @@ class voiceCommand(commands.Cog):
         await ctx.defer()
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as r:
+                
                 urlResponse = await r.read()
                 if (not os.path.exists("temp/")):
                     os.mkdir("temp/")
