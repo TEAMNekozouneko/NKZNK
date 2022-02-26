@@ -4,7 +4,7 @@ from discord import SlashCommandGroup, ApplicationContext, Option, StageChannel,
 
 from discord.ext import commands
 
-import Cog.AC as auto_complete
+import Cog.Util.TabCompleter as func
 
 class ChannelCommand(commands.Cog):
 
@@ -174,10 +174,10 @@ class ChannelCommand(commands.Cog):
             return
 
     @VoiceChannelGroup.command(name="region", description="サーバーの地域を選択")
-    async def setRegion(self, ctx : ApplicationContext, channel : VoiceChannel, region : Option(str, "地域を選択", autocomplete=auto_complete.regionSelector), reason : Option(str, "理由を入力", required=False)):
+    async def setRegion(self, ctx : ApplicationContext, channel : VoiceChannel, region : Option(str, "地域を選択", autocomplete=func.VoiceRegion), reason : Option(str, "理由を入力", required=False)):
         await ctx.defer()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
-            if (region in auto_complete.regions):
+            if (region in func.voice_region):
                 r = None
                 if (region == "amsterdam"):
                     r = VoiceRegion.amsterdam
@@ -312,10 +312,11 @@ class ChannelCommand(commands.Cog):
         await ctx.respond(embed = embed)
 
     @StageChannelGroup.command(name="region", description="サーバーの地域を設定します。")
-    async def setsRegion(self, ctx : ApplicationContext, channel : StageChannel, region : Option(str, "サーバーの地域を選択", autocomplete=auto_complete.sregionSelector), reason : Option(str, "理由を入力", required=False)):
+    async def setsRegion(self, ctx : ApplicationContext, channel : StageChannel, region : Option(str, "サーバーの地域を選択", autocomplete=func.StageRegion), reason : Option(str, "理由を入力", required=False)):
+        
         await ctx.defer()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
-            if (region in auto_complete.sregions):
+            if (region in func.stage_region):
                 r = None
                 if (region == "amsterdam"):
                     r = VoiceRegion.amsterdam

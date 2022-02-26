@@ -27,11 +27,11 @@ print("Starting...")
 print("Loading Modules")
 
 import discord, json, sys, os
-from Cog.AC import resetConfig
+import Cog.Util.util_func as func
 
 if (not os.path.exists("config.json")):
     print("Generating Default Config...")
-    resetConfig()
+    func.ResetConfig()
     print("Generated. please check config.json file")
     sys.exit()
 

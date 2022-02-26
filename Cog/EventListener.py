@@ -26,6 +26,8 @@ import discord
 from discord import ActivityType
 from discord.ext import commands
 
+import Cog.Util.util_func as func
+
 import aioconsole, asyncio, datetime, random, locale, platform, json
 
 class EventHandler(commands.Cog):
@@ -123,8 +125,7 @@ class EventHandler(commands.Cog):
                 print("\"reset confirm\" to reset config.json")
             elif (input_command == "reset confirm"):
                 print("reseting config.json...")
-                from Cog.AC import resetConfig
-                resetConfig()
+                func.ResetConfig()
                 await self.bot.close()
                 break
             else:
