@@ -125,7 +125,7 @@ class EventHandler(commands.Cog):
                 print("\"reset confirm\" to reset config.json")
             elif (input_command == "reset confirm"):
                 print("reseting config.json...")
-                func.ResetConfig()
+                func.resetConfig()
                 await self.bot.close()
                 break
             else:
