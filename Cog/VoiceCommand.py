@@ -43,12 +43,14 @@ class voiceCommand(commands.Cog):
                 embed.add_field(name="対処方法",value="・ボイスチャンネルへ接続\n・ボイスチャンネルを選択する")
                 await ctx.respond(embed=embed)
                 return
-            await ctx.guild.voice_client.disconnect()
+            if (not ctx.guild.voice_client is None):
+                await ctx.guild.voice_client.disconnect()
             await ctx.author.voice.channel.connect(timeout=30.0,reconnect=True)
             embed = discord.Embed(title="正常にチャンネルに接続しました。",description=f"正常に {ctx.author.voice.channel.mention} に接続しました", color=discord.Color.green())
             await ctx.respond(embed=embed)
         else:
-            await ctx.guild.voice_client.disconnect()
+            if (not ctx.guild.voice_client is None):
+                await ctx.guild.voice_client.disconnect()
             await channel.connect(timeout=30.0,reconnect=True)
             embed = discord.Embed(title="正常にチャンネルに接続しました。",description=f"正常に {channel.mention} に接続しました", color=discord.Color.green())
             await ctx.respond(embed=embed)
@@ -61,12 +63,14 @@ class voiceCommand(commands.Cog):
                 embed.add_field(name="対処方法",value="・ステージチャンネルへ接続\n・ステージチャンネルを選択する")
                 await ctx.respond(embed=embed)
                 return
-            await ctx.guild.voice_client.disconnect()
+            if (not ctx.guild.voice_client is None):
+                await ctx.guild.voice_client.disconnect()
             await ctx.author.voice.channel.connect(timeout=30.0,reconnect=True)
             embed = discord.Embed(title="正常にチャンネルに接続しました。",description=f"正常に {ctx.author.voice.channel.mention} に接続しました", color=discord.Color.green())
             await ctx.respond(embed=embed)
         else:
-            await ctx.guild.voice_client.disconnect()
+            if (not ctx.guild.voice_client is None):
+                await ctx.guild.voice_client.disconnect()
             await channel.connect(timeout=30.0,reconnect=True)
             embed = discord.Embed(title="正常にチャンネルに接続しました。",description=f"正常に {channel.mention} に接続しました", color=discord.Color.green())
             await ctx.respond(embed=embed)
@@ -88,15 +92,18 @@ class voiceCommand(commands.Cog):
         if (not volume is None):
             volume = volume / 100
         else:
-            volume = 100
+            volume = 1
 
         if (ctx.author.guild.voice_client is None):
             embed = discord.Embed(title="エラーが発生しました。", description="ボイスチャンネルまたはステージチャンネルに接続していませんでした。", color=discord.Color.dark_red())
         elif (ctx.author.guild.voice_client.is_paused()):
             ctx.author.guild.voice_client.resume()
-            embed = discord.Embed(title="音楽を再開しました。", color=discord.Color.puprle())
+            embed = discord.Embed(title="音楽を再開しました。", color=discord.Color.purple())
         elif (ctx.author.guild.voice_client.is_playing()):
+            ctx.author.guild.voice_client.pause()
             embed = discord.Embed(title="エラーが発生しました。", description="音楽はすでに再生済みです。", color=discord.Color.dark_red())
+        elif (url is None):
+            embed = discord.Embed(title="エラーが発生しました。", description="音楽は再生中ではないため、音楽を一時停止できませんでした。")
         else:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url) as r:                
@@ -118,7 +125,7 @@ class voiceCommand(commands.Cog):
             embed = discord.Embed(title="エラーが発生しました。", description="ボイスチャンネルまたはステージチャンネルに接続していませんでした。")
         else:
             ctx.guild.voice_client.stop()
-            embed = discord.Embed(title="音楽を停止しました。", color=discord.Color.puprle())
+            embed = discord.Embed(title="音楽を停止しました。", color=discord.Color.purple())
         await ctx.respond(embed=embed)
 
     @commands.slash_command(name="speak",description="Google TTSで喋ります")

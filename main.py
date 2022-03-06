@@ -27,11 +27,11 @@ print("Starting...")
 print("Loading Modules")
 
 import discord, json, sys, os
-import Cog.Util.util_func as func
+from Cog.Util.config_sys import reset_bot_cfg
 
 if (not os.path.exists("config.json")):
     print("Generating Default Config...")
-    func.resetConfig()
+    reset_bot_cfg()
     print("Generated. please check config.json file")
     sys.exit()
 
@@ -56,6 +56,7 @@ print("Loading Add-on Exetensions")
 
 for aexts in config_dict["extensions"]["addon_exts"]:
     print(f"loading {aexts}...")
+    bot.load_extension(aexts)
 
 print("Loaded all cog")
 
