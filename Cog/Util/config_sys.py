@@ -13,7 +13,7 @@ default_bot_settings = {
         "name": "NKZNK",
         "unix": False,
         "token": "",
-        "version": "2022.02.25"
+        "version": "2022.03.10"
     }
 }
 
