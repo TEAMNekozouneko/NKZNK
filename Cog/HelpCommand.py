@@ -36,7 +36,7 @@ class helpCommand(commands.Cog):
         self._last_member = None
     
     @commands.slash_command(name="help",description="このBotについて色々知ることができます。")
-    async def helpCommand(self, ctx : ApplicationContext):
+    async def Help(self, ctx : ApplicationContext):
         await ctx.defer()
         helpPage = [
             discord.Embed(title="NKZNK - システム情報",description=f"**Python**: {platform.python_version()}\n**Pycord**: {discord.__version__}",color=discord.Color.blue(),url="https://discord.gg/ErDmtEpaqe"),
@@ -56,7 +56,7 @@ class helpCommand(commands.Cog):
         helpPage[2].add_field(name="Special Thanks", value="モジュールを開発していただいた皆様")
 
         pageManager = pages.Paginator(pages=helpPage)
-        await pageManager.respond(ctx.interaction)
+        await pageManager.respond(ctx.interaction, ephemeral=True)
 
 def setup(bot):
     return bot.add_cog(helpCommand(bot))

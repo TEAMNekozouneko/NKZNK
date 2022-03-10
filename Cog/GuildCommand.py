@@ -22,16 +22,15 @@
 # SOFTWARE.
 #
 
-import discord
+import discord, datetime
 
 from discord import Option
-
-from discord.ext import pages
-from discord.ext import commands
-
-import datetime
+from discord.commands import permission, permissions
+from discord.ext import commands, pages
 
 from math import floor
+
+from Cog.Util.messages import msgFormat
 
 class GuildCommands(commands.Cog):
 
@@ -40,7 +39,7 @@ class GuildCommands(commands.Cog):
         self._last_member = None
 
     @commands.slash_command(name="server", description="サーバーを取得します。")
-    async def guildinfo(self, ctx, id : Option(str, "取得するサーバーIDを入力（このBotが参加していないサーバーは取得不可能です。）",required=False)):
+    async def LookupGuild(self, ctx, id : Option(str, "取得するサーバーIDを入力（このBotが参加していないサーバーは取得不可能です。）",required=False)):
         await ctx.defer()
         if (id is None):
             guildInfo = ctx.guild 
@@ -125,7 +124,7 @@ class GuildCommands(commands.Cog):
             try:
                 intid = int(id)
             except:
-                embed = discord.Embed(title="エラー",description="サーバーの取得に失敗しました。", color=discord.Color.dark_red())
+                embed = msgFormat("error", "failed", "server", ctx)
                 await ctx.respond(embed=embed)
                 return
             if (not self.bot.get_guild(intid) is None):
@@ -182,7 +181,7 @@ class GuildCommands(commands.Cog):
                 pageMan = pages.Paginator(embeds)
                 await pageMan.respond(ctx.interaction)
             else:
-                embed = discord.Embed(title="エラー",description="サーバーの取得に失敗しました。", color=discord.Color.dark_red())
+                embed = msgFormat("error", "failed", "server")
                 await ctx.respond(embed=embed)
 
 def setup(bot : discord.Bot):

@@ -30,6 +30,8 @@ from discord.ext import commands
 
 from mcstatus import MinecraftServer, MinecraftBedrockServer
 
+from Cog.Util.messages import msgFormat
+
 class UtilCommand(commands.Cog):
 
     def __init__(self, bot):
@@ -41,7 +43,7 @@ class UtilCommand(commands.Cog):
         return [typ for typ in types if typ.startswith(ctx.value)]
 
     @commands.slash_command(name="mcserver", description="Minecraft サーバーの情報を取得します。")
-    async def lookupServer(self, ctx,edition : Option(str, "Minecraft のエディションを選択", autocomplete=server_auto), ip : Option(str, "Minecraft サーバーのIPを入力 (例: nekozouneko.ddns.net:25565)")):
+    async def LookupMCServer(self, ctx,edition : Option(str, "Minecraft のエディションを選択", autocomplete=server_auto), ip : Option(str, "Minecraft サーバーのIPを入力 (例: nekozouneko.ddns.net:25565)")):
         await ctx.defer()
         if (edition == "Bedrock"):
             try:
@@ -54,7 +56,7 @@ class UtilCommand(commands.Cog):
                 embed.add_field(name="説明", value=f"{status.motd}",inline=False)
                 embed.add_field(name="プレイヤー", value=f"{status.players_online} / {status.players_max}")
             except:
-                embed = discord.Embed(title="エラー",description="サーバーにアクセスできませんでした。ポート指定/開放またはUDPプロトコル以外で開いている場合があります\nIP指定の例: nekozouneko.ddns.net:19132",color=discord.Color.dark_red())
+                embed = msgFormat("error", "failed", "bedrock_server", ctx)
         elif (edition == "Java"):
             try:
                 server = MinecraftServer.lookup(ip)
@@ -67,13 +69,13 @@ class UtilCommand(commands.Cog):
                 embed.add_field(name="プレイヤー", value=f"{status.players.online} / {status.players.max}")
 
             except:
-                embed = discord.Embed(title="エラー",description="サーバーにアクセスできませんでした。ポート指定/開放またはTCPプロトコル以外で開いている場合があります\n`IP指定の例: mc.hypixel.net:25565`",color=discord.Color.dark_red())
+                embed = msgFormat("error", "failed", "java_server", ctx)
         else:
-            embed = discord.Embed(title="エラー",description="引数 \"edtion\" で問題が発生しました。",color=discord.Color.dark_red())
+            embed = msgFormat("error", "type", "arg_type_error", ctx)
         await ctx.respond(embed=embed)
     
     @commands.slash_command(name="invite",description="ボットの招待リンクを取得")
-    async def inviteBot(self, ctx, id : Option(str, "BotのIDを入力",required=False)):
+    async def InviteBot(self, ctx, id : Option(str, "BotのIDを入力",required=False)):
         if (id is None):
             inviteLink=f"https://discord.com/oauth2/authorize?client_id={self.bot.user.id}&permissions=2199023255551&scope=bot%20applications.commands"
             v = discord.ui.Button(
@@ -145,7 +147,7 @@ class UtilCommand(commands.Cog):
             await ctx.respond(embed=e, view=iew)
 
     @commands.slash_command(name="ebdimage", description="埋め込みに画像を追加します。")
-    async def EmbedonImage(self, ctx : ApplicationContext, url : Option(str, "埋め込みに追加する画像を入力"), dlbutton: Option(bool, "ダウンロードボタンを表示するか", required=False)):
+    async def ImageonEmbed(self, ctx : ApplicationContext, url : Option(str, "埋め込みに追加する画像を入力"), dlbutton: Option(bool, "ダウンロードボタンを表示するか", required=False)):
         embed = discord.Embed(color=discord.Color.from_rgb(47, 49, 54))
         embed.set_image(url=url)
         if (dlbutton is None or dlbutton):

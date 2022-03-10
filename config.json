@@ -1,0 +1,16 @@
+{
+    "accept_license": true,
+
+    "extensions": {
+        "addon_exts": ["Addon.debug"],
+        "default_exts": ["Cog.ChannelCommand", "Cog.GuildCommand", "Cog.HelpCommand", "Cog.UserCommand", "Cog.UtilityCommand", "Cog.VoiceCommand", "Cog.WikiCommand", "Cog.EventListener"]
+    },
+
+    "settings": {
+        "enable_console": true,
+        "name": "NKZNK",
+        "unix": false,
+        "token": "OTM3MjUyNjY2OTk0NzIwNzg4.YfZCkQ.FBsqBH01Kr8cxVMhMt_Sc3D9DYI",
+        "version": "2022.03.10"
+    }
+}

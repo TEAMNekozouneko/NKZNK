@@ -1,4 +1,4 @@
-#
+# 
 # MIT License
 #
 # Copyright (c) 2022 Nekozouneko Team Lab
@@ -22,13 +22,13 @@
 # SOFTWARE.
 #
 
-import discord
+import discord, os, aiohttp
 
 from discord import ApplicationContext, Option
-
+from discord.commands import permission, permissions
 from discord.ext import commands
 
-import os, aiohttp
+from Cog.Util.messages import msgFormat
 
 class voiceCommand(commands.Cog):
     def __init__(self, bot):
@@ -36,11 +36,10 @@ class voiceCommand(commands.Cog):
         self._last_member = None
 
     @commands.slash_command(name="join",description="ボイスチャットに接続します")
-    async def join(self, ctx, channel: Option(discord.VoiceChannel,"ボイスチャンネルを選択 (ステージは別コマンド参照)",required=False)):
+    async def ConnectVoiceChannel(self, ctx: ApplicationContext, channel: Option(discord.VoiceChannel,"ボイスチャンネルを選択 (ステージは別コマンド参照)",required=False)):
         if (channel is None):
             if (ctx.author.voice is None):
-                embed = discord.Embed(title="エラーが発生しました。",description="例外が発生しました。以下の内容を参照してください。",color=discord.Color.dark_red())
-                embed.add_field(name="対処方法",value="・ボイスチャンネルへ接続\n・ボイスチャンネルを選択する")
+                embed = msgFormat("error", "voice", "cant_connect_voice", ctx)
                 await ctx.respond(embed=embed)
                 return
             if (not ctx.guild.voice_client is None):
@@ -56,11 +55,10 @@ class voiceCommand(commands.Cog):
             await ctx.respond(embed=embed)
 
     @commands.slash_command(name="joins",description="ステージチャットに接続します")
-    async def joins(self, ctx, channel: Option(discord.StageChannel,"ステージチャンネルを選択 (ボイスチャットは別コマンド参照)",required=False)):
+    async def ConnectStageChannel(self, ctx, channel: Option(discord.StageChannel,"ステージチャンネルを選択 (ボイスチャットは別コマンド参照)",required=False)):
         if (channel is None):
             if (ctx.author.voice is None):
-                embed = discord.Embed(title="エラーが発生しました。",description="例外が発生しました。以下の内容を参照してください。",color=discord.Color.dark_red())
-                embed.add_field(name="対処方法",value="・ステージチャンネルへ接続\n・ステージチャンネルを選択する")
+                embed = msgFormat("error", "voice", "cant_connect_stage", ctx)
                 await ctx.respond(embed=embed)
                 return
             if (not ctx.guild.voice_client is None):
@@ -76,17 +74,16 @@ class voiceCommand(commands.Cog):
             await ctx.respond(embed=embed)
     
     @commands.slash_command(name="disconnect",description="ボイス | ステージチャンネルから切断します。")
-    async def dc(self, ctx):
+    async def DisconnectVS(self, ctx):
         if (ctx.guild.voice_client is None):
-            await ctx.respond("おそらくすでに切断されています。")
-            return
+            embed = msgFormat("error", "voice", "already_disconnected", ctx)
         else:
             embed = discord.Embed(title="正常にチャンネルから切断しました。",description=f"正常に {ctx.guild.voice_client.channel.mention} から切断しました", color=discord.Color.red())
             await ctx.guild.voice_client.disconnect()
-            await ctx.respond(embed=embed)
+        await ctx.respond(embed=embed)
 
     @commands.slash_command(name="play",description="音楽をURL経由で再生します。(YouTubeは再生できません。)")
-    async def urlplay(self, ctx: ApplicationContext, url: Option(str,"URLを入力...",required=False),volume: Option(int,"ボリューム 0% から 100%",required=False)):
+    async def PlayMusic(self, ctx: ApplicationContext, attachment: Option(discord.Attachment, "ファイルを添付して再生します。", required=False), url: Option(str,"URLを入力...",required=False),volume: Option(int,"ボリューム 0% から 100%",required=False)):
         await ctx.defer()
 
         if (not volume is None):
@@ -95,15 +92,16 @@ class voiceCommand(commands.Cog):
             volume = 1
 
         if (ctx.author.guild.voice_client is None):
-            embed = discord.Embed(title="エラーが発生しました。", description="ボイスチャンネルまたはステージチャンネルに接続していませんでした。", color=discord.Color.dark_red())
+            embed = msgFormat("error", "voice", "not_connected", ctx)
         elif (ctx.author.guild.voice_client.is_paused()):
             ctx.author.guild.voice_client.resume()
             embed = discord.Embed(title="音楽を再開しました。", color=discord.Color.purple())
         elif (ctx.author.guild.voice_client.is_playing()):
-            ctx.author.guild.voice_client.pause()
-            embed = discord.Embed(title="エラーが発生しました。", description="音楽はすでに再生済みです。", color=discord.Color.dark_red())
+            embed = msgFormat("error", "voice", "already_played", ctx)
         elif (url is None):
-            embed = discord.Embed(title="エラーが発生しました。", description="音楽は再生中ではないため、音楽を一時停止できませんでした。")
+            await attachment.save(f"temp/{ctx.guild_id}_TEMP.mp3")
+            embed = discord.Embed(title="音楽を再生します...", color=discord.Color.purple())
+            ctx.guild.voice_client.play(discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(f"temp/{ctx.guild_id}_TEMP.mp3"), volume=volume))
         else:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url) as r:                
@@ -117,19 +115,19 @@ class voiceCommand(commands.Cog):
             ctx.guild.voice_client.play(discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(f"temp/{ctx.guild_id}_TEMP.mp3"), volume=volume))
 
         await ctx.respond(embed=embed)
-
+    
     @commands.slash_command(name="stop",description="音楽を停止します。")
-    async def musicstop(self, ctx: ApplicationContext):
+    async def StopMusic(self, ctx: ApplicationContext):
         await ctx.defer()
         if (ctx.guild.voice_client is None):
-            embed = discord.Embed(title="エラーが発生しました。", description="ボイスチャンネルまたはステージチャンネルに接続していませんでした。")
+            embed = msgFormat("error", "voice", "not_connected", ctx)
         else:
             ctx.guild.voice_client.stop()
             embed = discord.Embed(title="音楽を停止しました。", color=discord.Color.purple())
         await ctx.respond(embed=embed)
 
     @commands.slash_command(name="speak",description="Google TTSで喋ります")
-    async def speak(self, ctx, string : Option(str,"喋るテキスト")):
+    async def SpeakTTS(self, ctx, string : Option(str,"喋るテキスト")):
         await ctx.defer()
         if (not ctx.author.guild.voice_client.is_playing()):
             async with aiohttp.ClientSession() as session:
@@ -142,9 +140,9 @@ class voiceCommand(commands.Cog):
             await ctx.respond(f"{str(ctx.author)}: {string}")
     
     @commands.slash_command(name="pause", description="音楽を一時停止します。")
-    async def pausem(self, ctx : ApplicationContext):
+    async def PauseMusic(self, ctx : ApplicationContext):
         if (ctx.author.guild.voice_client is None):
-            embed = discord.Embed(title="エラーが発生しました。", description="ボイスチャンネルまたはステージチャンネルに接続していませんでした。", color=discord.Color.dark_red())
+            embed = msgFormat("error", "voice", "not_connected", ctx)
         else:
             ctx.author.guild.voice_client.pause()
             embed = discord.Embed(title="音楽を一時停止しました。", color=discord.Color.purple())

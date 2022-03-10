@@ -79,7 +79,7 @@ class EventHandler(commands.Cog):
                 await self.bot.close()
                 break
             elif (input_command == "version"):
-                print(f"{self.bot_name} v.{self.bot_ver} stable release.")
+                print(f"{self.bot_name} v.{self.bot_ver} release.")
                 print("Repository: https://github.com/TEAMNekozouneko/NKZNK")
             elif (input_command == "reload" or input_command == "rl"):
                 print("Reloading All Exts...")

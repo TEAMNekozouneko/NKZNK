@@ -33,6 +33,8 @@ import datetime
 
 from math import floor
 
+from Cog.Util.messages import msgFormat
+
 class userCommand(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -41,9 +43,9 @@ class userCommand(commands.Cog):
     UserCommandGroup = SlashCommandGroup("user", "ユーザーに関するコマンドです。")
 
     @UserCommandGroup.command(name="info",description="ユーザー情報を取得します。")
-    async def lookup(self, ctx, member : Option(discord.Member,"取得するユーザーを選択。")):
+    async def LookupUser(self, ctx, member : Option(discord.Member,"取得するユーザーを選択。")):
         if (not isinstance(member, discord.Member)):
-            embed = discord.Embed(title="エラーが発生しました。", description="入力されたユーザーはこのサーバーに存在していません。", color=discord.Color.dark_red())
+            embed = msgFormat("error", "failed", "member", ctx)
             await ctx.respond(embed=embed)
             return
         await ctx.defer()
@@ -96,7 +98,7 @@ class userCommand(commands.Cog):
         await pageManager.respond(ctx.interaction,ephemeral=True)    
 
     @UserCommandGroup.command(name="mute", description="ユーザーのマイクをミュートします。")
-    async def smute(self, ctx : ApplicationContext, member : Option(discord.Member, "ミュートをするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
+    async def ServerMute(self, ctx : ApplicationContext, member : Option(discord.Member, "ミュートをするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
         if (ctx.author.guild_permissions.mute_members):
             if (not member.voice is None):
                 if (not member.voice.mute):
@@ -106,13 +108,13 @@ class userCommand(commands.Cog):
                     embed = discord.Embed(title="ミュートを解除しました。", color=discord.Color.green())
                     await member.edit(mute=False, reason=reason)
             else:
-                embed = discord.Embed(title="エラーが発生しました。", description="ユーザーがボイスチャンネルに接続していないためミュートできません", color=discord.Color.dark_red())
+                embed = msgFormat("error", "voice", "not_connected_mute", ctx)
         else:
-            embed = discord.Embed(title="エラーが発生しました。",description="権限 `メンバーをミュート`が必要です。",color=discord.Color.dark_red())
+            embed = msgFormat("error", "permissions", "manage_user_mute")
         await ctx.respond(embed=embed)
     
     @UserCommandGroup.command(name="deafen", description="ユーザーのスピーカーをミュートします。")
-    async def sdeafen(self, ctx : ApplicationContext, member : Option(discord.Member, "スピーカーミュートをするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
+    async def ServerDeafen(self, ctx : ApplicationContext, member : Option(discord.Member, "スピーカーミュートをするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
         if (ctx.author.guild_permissions.deafen_members):
             if (not member.voice is None):
                 if (not member.voice.deaf):
@@ -122,33 +124,33 @@ class userCommand(commands.Cog):
                     embed = discord.Embed(title="スピーカーミュートを解除しました。", color=discord.Color.green())
                     await member.edit(deafen=False, reason=reason)
             else:
-                embed = discord.Embed(title="エラーが発生しました。", description="ユーザーがボイスチャンネルに接続していないためミュートできません", color=discord.Color.dark_red())
+                embed = msgFormat("error", "voice", "not_connected_mute")
         else:
-            embed = discord.Embed(title="エラーが発生しました。",description="権限 `メンバーをスピーカーミュート`が必要です。",color=discord.Color.dark_red())
+            embed = msgFormat("error", "permissions", "manage_user_deafen")
         await ctx.respond(embed=embed)
 
     @UserCommandGroup.command(name="ban", description="ユーザーをBANします。")
-    async def mban(self, ctx : ApplicationContext, member : Option(discord.Member, "BANするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
+    async def BanMember(self, ctx : ApplicationContext, member : Option(discord.Member, "BANするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
         if (ctx.author.guild_permissions.ban_members):
             embed = discord.Embed(title=f"{str(member)}のアクセスを禁止しました。", description="Banned by an operator.", color=discord.Color.green())
             await member.ban(reason=reason)
             await ctx.respond(embed=embed)
         else:
-            embed = discord.Embed(title="エラーが発生しました。",description="権限 `メンバーをアクセス禁止`が必要です。",color=discord.Color.dark_red())
+            embed = msgFormat("error", "permissions", "manage_user_ban")
             await ctx.respond(embed=embed)
 
     @UserCommandGroup.command(name="kick", description="ユーザーをKickします。")
-    async def mkicik(self, ctx : ApplicationContext, member : Option(discord.Member, "Kickするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
+    async def KickMember(self, ctx : ApplicationContext, member : Option(discord.Member, "Kickするメンバーを選択"), reason : Option(str, "理由を入力", required=False)):
         if (ctx.author.guild_permissions.kick_members):
             embed = discord.Embed(title=f"{str(member)}を追放しました。", description="Kicked by an operator.", color=discord.Color.green())
             await member.kick(reason=reason)
             await ctx.respond(embed=embed)
         else:
-            embed = discord.Embed(title="エラーが発生しました。",description="権限 `メンバーを追放`が必要です。",color=discord.Color.dark_red())
+            embed = msgFormat("error", "permissions", "manage_user_kick", ctx)
             await ctx.respond(embed=embed)
 
     @UserCommandGroup.command(name="disconnect", description="ユーザーをボイスチャンネルから切断します。")
-    async def mdisconnect(self, ctx : ApplicationContext, member : discord.Member, reason : Option(str, "理由を入力", required=False)):
+    async def DisconnectMember(self, ctx : ApplicationContext, member : discord.Member, reason : Option(str, "理由を入力", required=False)):
         if (ctx.author.guild_permissions.move_members):
             if (not ctx.author.voice is None):
                 if (reason is None):
@@ -156,14 +158,14 @@ class userCommand(commands.Cog):
                 embed = discord.Embed(title=f"{str(member)}を切断しました。", description=f"**既存の接続先**: {member.voice.channel.mention}\n**理由**: {reason}", color=discord.Color.green())
                 await member.edit(voice_channel=None, reason=reason)
             else:
-                embed = discord.Embed(title="エラーが発生しました。", description=f"{member.mention}がボイスチャンネルに接続していません", color=discord.Color.dark_red())
+                embed = msgFormat("error", "voice", "author_not_connected", ctx, member.mention)
         elif (ctx.author == member):
             if (reason is None):
                 reason = "なし"
             embed = discord.Embed(title=f"あなたを切断しました。", description=f"**既存の接続先**: {member.voice.channel.mention}\n**理由**: {reason}", color=discord.Color.green())
             await ctx.author.edit(voice_channel=None, reason=reason)
         else:
-            embed = discord.Embed(title="エラーが発生しました。", description=f"権限 `メンバーを移動`が必要です。", color=discord.Color.dark_red())
+            embed = msgFormat("error", "permissions", "manage_user_move", ctx)
         await ctx.respond(embed=embed)
 
 def setup(bot):

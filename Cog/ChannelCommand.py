@@ -19,7 +19,7 @@ class ChannelCommand(commands.Cog):
     TextChannelGroup = channelGroup.create_subgroup("text", "テキストチャンネルのコマンドです。")
 
     @TextChannelGroup.command(name="nsfw",description="NSFWの有無効化ができます。")
-    async def nsfw(self, ctx : ApplicationContext, channel : Option(TextChannel, "NSFWを設定するチャンネルを選択"), nsfw : Option(bool, "はいならTrue、いいえならFalse"), reason : Option(str, "理由を入力", required=False)):
+    async def TextSettings_NSFW(self, ctx : ApplicationContext, channel : Option(TextChannel, "NSFWを設定するチャンネルを選択"), nsfw : Option(bool, "はいならTrue、いいえならFalse"), reason : Option(str, "理由を入力", required=False)):
         await ctx.defer()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
             if (nsfw):
@@ -33,7 +33,7 @@ class ChannelCommand(commands.Cog):
         await ctx.respond(embed=embed)
 
     @TextChannelGroup.command(name="lock",description="@everyoneからの送信をできなくします。(再実行で解除)")
-    async def lock(self, ctx : ApplicationContext, channel : Option(TextChannel,"ロックするチャンネルを選択"), reason : Option(str, "理由を入力", required=False)):
+    async def TextSettings_Lock(self, ctx : ApplicationContext, channel : Option(TextChannel,"ロックするチャンネルを選択"), reason : Option(str, "理由を入力", required=False)):
         await ctx.defer()
         print()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
@@ -54,7 +54,7 @@ class ChannelCommand(commands.Cog):
             await ctx.respond(embed=embed)
 
     @TextChannelGroup.command(name="info",description="テキストチャンネルの情報を取得します。")
-    async def tinfo(self, ctx : ApplicationContext, channel : Option(TextChannel, "テキストチャンネルの情報を取得します")):
+    async def TextChannel_Info(self, ctx : ApplicationContext, channel : Option(TextChannel, "テキストチャンネルの情報を取得します")):
         await ctx.defer()
         embed = discord.Embed(title=f":speech_balloon: {channel.name} の情報", description="**ID**: {0}".format(channel.id),color=discord.Color.light_grey(),url=f"https://discord.com/channels/{channel.guild.id}/{channel.id}")
         
@@ -75,14 +75,14 @@ class ChannelCommand(commands.Cog):
         await ctx.respond(embed=embed)
 
     @TextChannelGroup.command(name="slowmode",description="遅延する時間を設定します。")
-    async def setSlow(self, ctx : ApplicationContext, channel : Option(TextChannel, "遅延を設定するチャンネルを入力"), slow : Option(int, "遅延時間を入力"),reason : Option(str, "理由を設定します。", required=False)):
+    async def TextSettings_Slowmode(self, ctx : ApplicationContext, channel : Option(TextChannel, "遅延を設定するチャンネルを入力"), slow : Option(int, "遅延時間を入力"),reason : Option(str, "理由を設定します。", required=False)):
         await ctx.defer()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
             if (reason is None):
                 reason = f"{str(ctx.author)}によって実行されました。"
 
             if (slow < 0):
-                embed = discord.Embed(title="エラーが発生しました。",description="負の数ではない数字を入力してください。",color=discord.Color.dark_red())
+                embed = msg_format.msgFormat("error", "type", "do_not_minus", ctx)
                 await ctx.respond(embed=embed)
                 return
 
@@ -97,7 +97,7 @@ class ChannelCommand(commands.Cog):
     VoiceChannelGroup = channelGroup.create_subgroup("voice", "ボイスチャンネルのコマンドです")
 
     @VoiceChannelGroup.command(name="info", description="ボイスチャンネルの情報を取得します。")
-    async def vinfo(self, ctx : ApplicationContext, channel : Option(VoiceChannel, "ボイスチャンネルを選択")):
+    async def VoiceChannel_Info(self, ctx : ApplicationContext, channel : Option(VoiceChannel, "ボイスチャンネルを選択")):
         await ctx.defer()
         embed = discord.Embed(title=f":loud_sound: {channel.name} の情報", description=f"**ID**: {channel.id}", color=discord.Color.light_grey())
 
@@ -118,7 +118,7 @@ class ChannelCommand(commands.Cog):
         await ctx.respond(embed=embed)
     
     @VoiceChannelGroup.command(name="limit", description="ユーザーの制限数を設定します。")
-    async def setLimit(self, ctx : ApplicationContext, channel : Option(VoiceChannel, "制限をつけるチャンネルを選択"), limit : Option(int, "制限人数を入力（0にすると制限解除）"), reason : Option(str, "理由を入力", required=False)):
+    async def VoiceSettings_Limit(self, ctx : ApplicationContext, channel : Option(VoiceChannel, "制限をつけるチャンネルを選択"), limit : Option(int, "制限人数を入力（0にすると制限解除）"), reason : Option(str, "理由を入力", required=False)):
         await ctx.defer()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
             if (100 <= limit):
@@ -133,7 +133,7 @@ class ChannelCommand(commands.Cog):
             return
 
     @VoiceChannelGroup.command(name="region", description="サーバーの地域を選択")
-    async def setRegion(self, ctx : ApplicationContext, channel : VoiceChannel, region : Option(str, "地域を選択", autocomplete=func.VoiceRegion), reason : Option(str, "理由を入力", required=False)):
+    async def VoiceSettings_Region(self, ctx : ApplicationContext, channel : VoiceChannel, region : Option(str, "地域を選択", autocomplete=func.VoiceRegion), reason : Option(str, "理由を入力", required=False)):
         await ctx.defer()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
             if (region in func.voice_region):
@@ -151,12 +151,12 @@ class ChannelCommand(commands.Cog):
             return
 
     @VoiceChannelGroup.command(name="bitrate", description="ボイスチャンネルのビットレートを変更します。")
-    async def setBitrate(self, ctx : ApplicationContext, channel : Option(VoiceChannel, "ビットレートを変更するチャンネルを選択"), bitrate : Option(int, "ビットレートを指定してください（ブーストしてない限り96Kbps以上不可）"), reason : Option(str, "理由を入力", required=False)):
+    async def VoiceSettings_Bitrate(self, ctx : ApplicationContext, channel : Option(VoiceChannel, "ビットレートを変更するチャンネルを選択"), bitrate : Option(int, "ビットレートを指定してください（ブーストしてない限り96Kbps以上不可）"), reason : Option(str, "理由を入力", required=False)):
         await ctx.defer()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
             bitrate = bitrate * 1000
             if (bitrate > ctx.author.guild.bitrate_limit):
-                embed = discord.Embed(title="エラーが発生しました。", description=f"このサーバーでは、{ctx.author.guild.bitrate_limit / 1000}Kbpsまでしか利用できません。",color=discord.Color.dark_red())
+                embed = msg_format.msgFormat("error", "server_limited", "required_bst_bitrate", ctx)
                 await ctx.respond(embed=embed)
                 return
             elif (bitrate < 8000):
@@ -174,7 +174,7 @@ class ChannelCommand(commands.Cog):
     StageChannelGroup = channelGroup.create_subgroup("stage", "ステージチャンネルのコマンドです。")
 
     @StageChannelGroup.command(name="info", description="ステージチャンネルの情報を取得します。")
-    async def sinfo(self, ctx, channel : StageChannel):
+    async def StageChannel_Info(self, ctx, channel : StageChannel):
         await ctx.defer()
         embed = discord.Embed(title=f":satellite: {channel.name} の情報", description=f"**ID**: {channel.id}", color=discord.Color.light_grey())
 
@@ -191,7 +191,7 @@ class ChannelCommand(commands.Cog):
         await ctx.respond(embed = embed)
 
     @StageChannelGroup.command(name="region", description="サーバーの地域を設定します。")
-    async def setsRegion(self, ctx : ApplicationContext, channel : StageChannel, region : Option(str, "サーバーの地域を選択", autocomplete=func.StageRegion), reason : Option(str, "理由を入力", required=False)):
+    async def StageSettings_Region(self, ctx : ApplicationContext, channel : StageChannel, region : Option(str, "サーバーの地域を選択", autocomplete=func.StageRegion), reason : Option(str, "理由を入力", required=False)):
         
         await ctx.defer()
         if (ctx.author.guild_permissions.manage_channels or ctx.author.guild_permissions.manage_guild):
