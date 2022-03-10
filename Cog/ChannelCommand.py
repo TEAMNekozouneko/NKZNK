@@ -109,7 +109,7 @@ class ChannelCommand(commands.Cog):
         if (channel.rtc_region is None):
             embed.add_field(name="サーバー", value="自動", inline=False)
         else:
-            rt = RTCSwitcher()
+            rt = RTCSwitcher(channel)
             embed.add_field(name=rt[0], value=rt[1], inline=False)
         if (channel.user_limit == 0):
             embed.add_field(name="人数制限", value=f"無制限")
@@ -186,7 +186,7 @@ class ChannelCommand(commands.Cog):
         if (channel.rtc_region is None):
             embed.add_field(name="サーバー", value="自動", inline=False)
         else:
-            rt = RTCSwitcher()
+            rt = RTCSwitche(channel)
             embed.add_field(name=rt[0], value=rt[1], inline=False)
         await ctx.respond(embed = embed)
 
